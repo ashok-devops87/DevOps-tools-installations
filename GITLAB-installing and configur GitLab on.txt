@@ -1,0 +1,138 @@
+#installing and configur GitLab on ubuntu #ubuntu-noble-24.04-amd64-server-20241109
+
+GITLAB LATEST VERSION : 17.8, 
+PROTOCOLS : HTTP  : 80
+            HTTPS : 443
+            SSH   : 22
+
+#GitLab installation requirements
+
+minimum : t2.medium
+#Storage
+#The Linux package requires about 2.5 GB of storage space for #installation
+#CPU
+#For a maximum of 20 requests per second or 1,000 users, you should have 8 vCPU
+#Memory
+#For a maximum of 20 requests per second or 1,000 users, you should have 16 GB of memory.
+
+#Step 1 — Installing the Dependencies
+
+#First, refresh the local package index:
+sudo apt update
+#Then install the dependencies by entering this command:
+sudo apt install ca-certificates curl openssh-server postfix tzdata perl
+
+#Step 2 — Installing GitLab
+#First, move into the /tmp directory:
+cd /tmp
+#Then download the installation script:
+curl -LO https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+
+
+#Once you are satisfied with the safety of the script, run the installer:
+sudo bash /tmp/script.deb.sh
+
+#Install gitlab-ce
+sudo apt install gitlab-ce
+
+#Step 3 — Editing the GitLab Configuration File
+
+sudo vim /etc/gitlab/gitlab.rb
+...
+external_url 'https://your_domain' or 'server ip'
+...
+
+#Run the following command to reconfigure GitLab:
+sudo gitlab-ctl reconfigure
+
+check port listening
+netstat -ntpl
+
+check prosess running 
+ps -ef | grep
+ check from local accessing
+ curl -i http://localhost:80
+
+check the status 
+sudo gitlab-ctl status
+sudo gitlab-ctl restart
+
+
+Logging In for the First Time
+https://your_domain or server ip
+
+note : On your first visit, you’ll be greeted with a login page:
+
+GitLab generates an initial secure password for you. 
+It is stored in a folder that you can access as an administrative sudo user:
+
+#sudo cat /etc/gitlab/initial_root_password
+
+note : Back on the login page, enter the following:
+
+Username: root
+
+Password: [the password listed on /etc/gitlab/initial_root_password]
+
+we can login gitlab account
+note : Updating Your Password
+
+#############################
+Summary of Useful gitlab-ctl Commands:
+gitlab-ctl status: Check the status of GitLab services.
+gitlab-ctl start: Start all GitLab services.
+gitlab-ctl stop: Stop all GitLab services.
+gitlab-ctl restart: Restart all GitLab services.
+gitlab-ctl reconfigure: Apply changes in the configuration.
+gitlab-ctl backup: Create a backup.
+gitlab-ctl restore: Restore from a backup.
+gitlab-ctl tail: View logs.
+gitlab-ctl health: Check the health of GitLab services.
+
+#################################
+ sudo gitlab-ctl status
+run: alertmanager: (pid 20355) 1561s; run: log: (pid 19724) 1623s
+run: gitaly: (pid 20325) 1563s; run: log: (pid 18270) 1783s
+run: gitlab-exporter: (pid 20253) 1566s; run: log: (pid 19559) 1640s
+run: gitlab-kas: (pid 18584) 1766s; run: log: (pid 18621) 1763s
+run: gitlab-workhorse: (pid 20219) 1568s; run: log: (pid 19350) 1659s
+run: logrotate: (pid 18110) 1796s; run: log: (pid 18130) 1795s
+run: nginx: (pid 20228) 1567s; run: log: (pid 19420) 1653s
+run: node-exporter: (pid 20242) 1567s; run: log: (pid 19494) 1647s
+run: postgres-exporter: (pid 20369) 1560s; run: log: (pid 19772) 1617s
+run: postgresql: (pid 18374) 1773s; run: log: (pid 18391) 1772s
+run: prometheus: (pid 20275) 1565s; run: log: (pid 19657) 1630s
+run: puma: (pid 19201) 1674s; run: log: (pid 19227) 1671s
+run: redis: (pid 18181) 1790s; run: log: (pid 18202) 1789s
+run: redis-exporter: (pid 20260) 1566s; run: log: (pid 19604) 1636s
+run: sidekiq: (pid 19255) 1668s; run: log: (pid 19297) 1665s
+
+
+
+netstat -ntpl
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:25              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8092          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8082          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8153          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8154          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8155          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8150          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:8151          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9100          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9093          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9090          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9121          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9168          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9187          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:6010          0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:8060            0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9229          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:9236          0.0.0.0:*               LISTEN      -
+tcp6       0      0 ::1:6010                :::*                    LISTEN      -
+tcp6       0      0 :::9094                 :::*                    LISTEN      -
+tcp6       0      0 :::25                   :::*                    LISTEN      -
+tcp6       0      0 :::22                   :::*                 
